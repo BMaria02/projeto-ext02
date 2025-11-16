@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosas Maquiagem - Beleza que Encanta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Notification -->
+    <div id="notification" class="notification">Mensagem</div>
+
+    <!-- Cart Overlay -->
+    <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+
+    <!-- Menu Lateral Esquerdo -->
+    <div id="menuSidebar" class="menu-sidebar">
+        <div class="menu-header">
+            <h2>🌹 Menu</h2>
+            <button class="close-menu-btn" onclick="toggleMenu()">✕</button>
+        </div>
+        <nav class="menu-nav">
+            <a href="#home" onclick="toggleMenu()">🏠 Início</a>
+            <a href="#produtos" onclick="toggleMenu()">💄 Produtos</a>
+            <a href="#sobre" onclick="toggleMenu()">ℹ️ Sobre Nós</a>
+            <a href="#contato" onclick="toggleMenu()">📞 Contato</a>
+        </nav>
+        <div class="menu-footer">
+            <p>Siga-nos:</p>
+            <div class="social-icons">
+                <span>📱</span>
+                <span>📧</span>
+                <span>💬</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar Direito -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>🛒 Seu Carrinho</h2>
+            <button class="icon-btn" onclick="toggleCart()">✕</button>
+        </div>
+        <div id="cartContent" class="cart-content">
+            <div class="cart-empty">Carrinho vazio 🛒</div>
+        </div>
+        <div id="cartFooter" class="cart-footer" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">R$ 0,00</span>
+            </div>
+            <button class="btn-primary" style="width: 100%;" onclick="openCheckoutModal()">Finalizar Compra 💳</button>
+        </div>
+    </div>
+
+    <!-- Modal de Finalização -->
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Finalizar Pedido</h2>
+                <button class="close-modal" onclick="closeCheckoutModal()">×</button>
+            </div>
+            <div id="checkoutContent">
+                <div class="checkout-form">
+                    <div class="form-group">
+                        <label class="form-label">👤 Nome Completo *</label>
+                        <input type="text" class="form-input" id="customerName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">📞 Telefone *</label>
+                        <input type="tel" class="form-input" id="customerPhone" placeholder="(00) 00000-0000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">🚚 Tipo de Entrega *</label>
+                        <select class="form-select" id="deliveryType" onchange="toggleAddressFields()" required>
+                            <option value="">Selecione...</option>
+                            <option value="retirada">🏪 Retirada na Loja (Grátis)</option>
+                            <option value="correios">📦 Correios (R$ 15,00)</option>
+                            <option value="entrega">🚚 Entrega Expressa (R$ 25,00)</option>
+                        </select>
+                    </div>
+
+                    <div id="addressFields" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">🏠 Nome da Rua *</label>
+                            <input type="text" class="form-input" id="street">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 2;">
+                                <label class="form-label">🔢 Número *</label>
+                                <input type="text" class="form-input" id="number">
+                            </div>
+                            <div class="form-group" style="flex: 3;">
+                                <label class="form-label">📍 Bairro *</label>
+                                <input type="text" class="form-input" id="neighborhood">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">🏙️ Cidade *</label>
+                                <input type="text" class="form-input" id="city">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">📮 CEP *</label>
+                                <input type="text" class="form-input" id="cep" placeholder="00000-000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">🆔 CPF *</label>
+                            <input type="text" class="form-input" id="cpf" placeholder="000.000.000-00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">💳 Forma de Pagamento *</label>
+                        <select class="form-select" id="paymentMethod" required>
+                            <option value="">Selecione...</option>
+                            <option value="debito">💳 Cartão de Débito</option>
+                            <option value="credito">💳 Cartão de Crédito</option>
+                            <option value="pix">📱 PIX</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">📝 Observações</label>
+                        <textarea class="form-textarea" id="observations" placeholder="Alguma observação sobre o pedido?"></textarea>
+                    </div>
+
+                    <div class="order-summary">
+                        <h3 style="margin-bottom: 1rem; color: #c44569; font-weight: 800;">📋 Resumo do Pedido</h3>
+                        <div id="orderSummary"></div>
+                        <div class="summary-line" style="border-top: 2px solid #ff6b9d; padding-top: 1rem; margin-top: 1rem;">
+                            <span style="font-weight: 800; font-size: 1.3rem;">Total Final:</span>
+                            <span id="finalTotal" style="font-weight: 800; font-size: 1.3rem; color: #ff6b9d;">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" style="width: 100%;" onclick="submitOrder()">
+                        Confirmar Pedido 🎉
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <div class="logo">
+                <span>🌹</span>
+                <span>ROSAS MAQUIAGEM</span>
+            </div>
+
+            <div class="header-right">
+                <button class="icon-btn" onclick="toggleSearch()">
+                    🔍
+                </button>
+                <button class="icon-btn" onclick="toggleCart()">
+                    🛒
+                    <span id="cartBadge" class="cart-badge" style="display: none;">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div id="searchBar" class="search-bar">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar produtos..." onkeyup="searchProducts()">
+                <button class="search-close" onclick="toggleSearch()">✕</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Realce Sua Beleza Natural</h1>
+            <p>
+                Descubra nossa coleção exclusiva de maquiagens de alta qualidade. 
+                Produtos que valorizam sua beleza única com cores vibrantes e texturas perfeitas.
+            </p>
+            <button class="btn-primary" onclick="scrollToProducts()">Explorar Produtos 💄</button>
+        </div>
+        
+        <div class="hero-visual">
+            💄
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <div id="produtos" class="filter-section">
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterProducts('todos')">✨ Todos</button>
+            <button class="filter-btn" onclick="filterProducts('rosto')">🧴 Rosto</button>
+            <button class="filter-btn" onclick="filterProducts('olhos')">👁️ Olhos</button>
+            <button class="filter-btn" onclick="filterProducts('labios')">💋 Lábios</button>
+            <button class="filter-btn" onclick="filterProducts('skincare')">🌟 Skincare</button>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <h2 class="section-title">Nossos Produtos</h2>
+        <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <!-- About Section -->
+    <section id="sobre" class="about-section">
+        <h2 class="section-title">Por Que Escolher a Rosas?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Qualidade Premium</h3>
+                <p>Produtos testados dermatologicamente e de alta qualidade</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Entrega Rápida</h3>
+                <p>Receba seus produtos em até 48 horas</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💖</div>
+                <h3>Satisfação Garantida</h3>
+                <p>Devolução grátis em até 30 dias</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contato" class="contact-section">
+        <h2 class="section-title">Entre em Contato</h2>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <div class="contact-icon">📱</div>
+                <h3>WhatsApp</h3>
+                <p>(11) 99999-9999</p>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">📧</div>
+                <h3>E-mail</h3>
+                <p>contato@rosasmaquiagem.com</p>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">📍</div>
+                <h3>Endereço</h3>
+                <p>Rua das Flores, 123 - Centro</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">🌹 ROSAS MAQUIAGEM</div>
+        <p>© 2024 Rosas Maquiagem. Todos os direitos reservados.</p>
+        <p style="margin-top: 0.5rem;">Feito com 💖 e muito carinho</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
